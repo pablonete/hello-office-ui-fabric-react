@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { DetailsListBasicExample } from './detailslist';
+import { SimpleDetailsList } from './SimpleDetailsList';
 
 ReactDOM.render(
-  <DetailsListBasicExample />, 
+  <SimpleDetailsList />, 
   document.getElementById('root'));
