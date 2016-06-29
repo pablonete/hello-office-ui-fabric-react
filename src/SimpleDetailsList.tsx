@@ -12,6 +12,7 @@ import {
   IContextualMenuProps,
   Link,
   TextField,
+  Toggle,
   buildColumns
 } from 'office-ui-fabric-react';
 import { SelectionMode } from 'office-ui-fabric-react/lib/utilities/selection/interfaces';
@@ -34,6 +35,7 @@ export interface IDetailsListBasicExampleState {
   contextualMenuProps?: IContextualMenuProps;
   isLazyLoaded?: boolean;
   isHeaderVisible?: boolean;
+  isGridVisible?: boolean;
 }
 
 export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExampleState> {
@@ -65,7 +67,8 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
       sortedColumnKey: 'name',
       isSortedDescending: false,
       isLazyLoaded: false,
-      isHeaderVisible: true
+      isHeaderVisible: true,
+      isGridVisible: false,
     };
   }
 
@@ -77,29 +80,40 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
       selectionMode,
       columns,
       contextualMenuProps,
-      isHeaderVisible
+      isHeaderVisible,
+      isGridVisible
     } = this.state;
 
     return (
       <div className='ms-DetailsListBasicExample'>
+        <Toggle
+          isToggled={ isGridVisible }
+          onChanged={ isToggled => this.setState({ isGridVisible: isToggled }) }
+          label='Grid visible'
+          onText='On'
+          offText='Off' 
+          />
+
         <CommandBar items={ this._getCommandItems() } />
 
-        <DetailsList
-          setKey='items'
-          items={ items }
-          columns={ columns }
-          layoutMode={ layoutMode }
-          isHeaderVisible={ isHeaderVisible }
-          selectionMode={ selectionMode }
-          constrainMode={ constrainMode }
-          onItemInvoked={ this._onItemInvoked }
-          ariaLabelForListHeader='Column headers. Use menus to perform column operations like sort and filter'
-          ariaLabelForSelectAllCheckbox='Toggle selection for all items'
-          onRenderMissingItem={ (index) => {
-            this._onDataMiss(index);
-            return null;
-          } }
-          />
+        <div style={ isGridVisible ? null : { display: "none" } }>
+          <DetailsList
+            setKey='items'
+            items={ items }
+            columns={ columns }
+            layoutMode={ layoutMode }
+            isHeaderVisible={ isHeaderVisible }
+            selectionMode={ selectionMode }
+            constrainMode={ constrainMode }
+            onItemInvoked={ this._onItemInvoked }
+            ariaLabelForListHeader='Column headers. Use menus to perform column operations like sort and filter'
+            ariaLabelForSelectAllCheckbox='Toggle selection for all items'
+            onRenderMissingItem={ (index) => {
+              this._onDataMiss(index);
+              return null;
+            } }
+            />
+          </div>
 
         { contextualMenuProps && (
           <ContextualMenu { ...contextualMenuProps } />
