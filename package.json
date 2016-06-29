@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "postinstall": "tsd reinstall --overwrite --save",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server --port 888"
   },
   "author": "Pablo Núñez",
   "license": "ISC",
@@ -12,8 +12,8 @@
     "bootstrap": "^3.3.5",
     "jquery": "^2.1.4",
     "office-ui-fabric-react": "^0.22.1",
-    "react": "~0.14.7",
-    "react-dom": "^0.14.7"
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
   },
   "devDependencies": {
     "css-loader": "^0.23.1",
@@ -22,9 +22,9 @@
     "html-webpack-plugin": "^2.9.0",
     "style-loader": "^0.13.0",
     "ts-loader": "^0.8.1",
-    "typescript": "~1.7.5",
+    "typescript": "^1.8.10",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.13",
-    "webpack-dev-server": "~1.10.1"
+    "webpack-dev-server": "^1.14.1"
   }
 }

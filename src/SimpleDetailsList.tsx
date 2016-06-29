@@ -16,7 +16,7 @@ import {
 } from 'office-ui-fabric-react';
 import { SelectionMode } from 'office-ui-fabric-react/lib/utilities/selection/interfaces';
 
-const PAGING_SIZE = 10;
+const PAGING_SIZE = 1000;
 const PAGING_DELAY = 5000;
 const ITEMS_COUNT = 5000;
 
@@ -60,7 +60,7 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
       constrainMode: ConstrainMode.horizontalConstrained,
       selectionMode: SelectionMode.multiple,
       canResizeColumns: true,
-      columns: this._buildColumns(_items, true, this._onColumnClick, ''),
+      columns: this._buildColumns(true, this._onColumnClick, ''),
       contextualMenuProps: null,
       sortedColumnKey: 'name',
       isSortedDescending: false,
@@ -146,7 +146,7 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
 
     this.setState({
       canResizeColumns: canResizeColumns,
-      columns: this._buildColumns(items, canResizeColumns, this._onColumnClick, sortedColumnKey, isSortedDescending)
+      columns: this._buildColumns(canResizeColumns, this._onColumnClick, sortedColumnKey, isSortedDescending)
     });
   }
 
@@ -332,7 +332,7 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
 
     this.setState({
       items: sortedItems,
-      columns: this._buildColumns(sortedItems, true, this._onColumnClick, key, isSortedDescending),
+      columns: this._buildColumns(true, this._onColumnClick, key, isSortedDescending),
       isSortedDescending: isSortedDescending,
       sortedColumnKey: key
     });
@@ -343,36 +343,48 @@ export class SimpleDetailsList extends React.Component<any, IDetailsListBasicExa
   }
 
   private _buildColumns(
-    items: any[],
     canResizeColumns?: boolean,
     onColumnClick?: (column: IColumn, ev: React.MouseEvent) => any,
     sortedColumnKey?: string,
-    isSortedDescending?: boolean,
-    groupedColumnKey?: string) {
+    isSortedDescending?: boolean): IColumn[] {
 
-    let columns = buildColumns(items, canResizeColumns, onColumnClick, sortedColumnKey, isSortedDescending, groupedColumnKey);
-
-    columns = columns.filter(column => column.name !== "isFolder");
-
-    columns.forEach(column => {
-      if (column.key === 'comments') {
-        column.isMultiline = true;
-        column.minWidth = 200;
-      } else if (column.key === 'name') {
-        column.onRender = (item) => (
-          <Link>{ item.isFolder ? "Folder: " : "" }{ item.name }</Link>
-        );
-      } else if (column.key === 'key') {
-        column.columnActionsMode = ColumnActionsMode.disabled;
-        column.onRender = (item) => (
-          <Link href='#'>{ item.key }</Link>
-        );
-        column.minWidth = 90;
-        column.maxWidth = 90;
-      }
-    });
-
-    return columns;
+    return [
+      { 
+        fieldName: "name",
+        key: "name",
+        name: "Name",
+        onRender: item => <Link>{ item.isFolder ? "Folder: " : "" }{ item.name }</Link>,
+        minWidth: 60,
+        maxWidth: 400,
+        isResizable: canResizeColumns,
+        onColumnClick,
+        isSorted: sortedColumnKey === "name",
+        isSortedDescending,
+      },
+      {
+        fieldName: "lastChanged",
+        key: "lastChanged",
+        name: "Changed",
+        minWidth: 60,
+        maxWidth: 180,
+        isResizable: canResizeColumns,
+        onColumnClick,
+        isSorted: sortedColumnKey === "lastChanged",
+        isSortedDescending,
+      },
+      {
+        fieldName: "comments",
+        key: "comments",
+        name: "Comments",
+        minWidth: 60,
+        maxWidth: 300,
+        isCollapsable: true,
+        isResizable: canResizeColumns,
+        onColumnClick,
+        isSorted: sortedColumnKey === "comments",
+        isSortedDescending,
+      },
+    ];
   }
 
   private createListItems(count: number) {
